@@ -1851,14 +1851,6 @@
   resolved "https://registry.yarnpkg.com/@stacks/common/-/common-7.0.0-next.70.tgz#2e0076e66643fb5b02a2acf8b8601b117715a121"
   integrity sha512-xCjTbMfEGBF8lvoAZOWJvv07nJmf18F5Q+2yYUrxGcojp6KAyvYNXzFZY+EatYztXkWV46bAnpGkxfCTGNytEA==
 
-"@stacks/connect-react@^22.5.0":
-  version "22.5.0"
-  resolved "https://registry.yarnpkg.com/@stacks/connect-react/-/connect-react-22.5.0.tgz#a9ed4564bf469d3274de79073369d342cc258312"
-  integrity sha512-9pJXNgIhVzCX2iOsGuBELLUIIii04a7FFdrValqmIIIf2GH41hkbmo9gyFOr4/NcsMhXbzLE3U6SyCGYQHUliQ==
-  dependencies:
-    "@stacks/connect" "7.8.0"
-    jsontokens "^4.0.1"
-
 "@stacks/connect-ui@6.5.0":
   version "6.5.0"
   resolved "https://registry.yarnpkg.com/@stacks/connect-ui/-/connect-ui-6.5.0.tgz#62741427c0107a7e7f137dfb63280eb16a9e49bb"
@@ -1866,7 +1858,7 @@
   dependencies:
     "@stencil/core" "^2.17.1"
 
-"@stacks/connect@7.8.0", "@stacks/connect@^7.8.0":
+"@stacks/connect@latest":
   version "7.8.0"
   resolved "https://registry.yarnpkg.com/@stacks/connect/-/connect-7.8.0.tgz#dc6bf15b0fdf940dd30087b12947c922ecf02f05"
   integrity sha512-whwHygS69XyY/LMvlyp0Whu4mkWkFoJ4Z/Bva9aO1xLLyEVDbKLZnslGWmPs1Io/y76oGEorqVEh0MeLymTIjg==
@@ -1924,8 +1916,7 @@
     schema-inspector "^2.0.2"
     zone-file "^2.0.0-beta.3"
 
-"@stacks/transactions-v6@npm:@stacks/transactions@^6.16.0", "@stacks/transactions@^6.17.0":
-  name "@stacks/transactions-v6"
+"@stacks/transactions-v6@npm:@stacks/transactions@^6.16.0", "@stacks/transactions@latest":
   version "6.17.0"
   resolved "https://registry.yarnpkg.com/@stacks/transactions/-/transactions-6.17.0.tgz#01a77e919c4c8f638b9ddb5ac593eaff3e25f96b"
   integrity sha512-FUah2BRgV66ApLcEXGNGhwyFTRXqX5Zco3LpiM3essw8PF0NQlHwwdPgtDko5RfrJl3LhGXXe/30nwsfNnB3+g==
