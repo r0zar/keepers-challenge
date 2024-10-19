@@ -330,7 +330,7 @@ function Model(props) {
       functionName: 'tap-interact',
       functionArgs: [
         contractPrincipalCV('SP2ZNGJ85ENDY6QRHQ5P2D4FXKGZWCKTB2T0Z55KS', 'meme-engine-cha-rc1'), 
-        contractPrincipalCV('SP2ZNGJ85ENDY6QRHQ5P2D4FXKGZWCKTB2T0Z55KS', 'keepers-challenge-rc1'), 
+        contractPrincipalCV('SP2ZNGJ85ENDY6QRHQ5P2D4FXKGZWCKTB2T0Z55KS', 'keepers-challenge-rc2'), 
         stringAsciiCV(action.toUpperCase())
       ],
       postConditionMode: PostConditionMode.Allow,
