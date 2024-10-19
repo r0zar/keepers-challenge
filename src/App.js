@@ -368,7 +368,7 @@ function Model(props) {
       <ActionShape 
         position={[-1, 0, 0]} 
         color="#c1121f" 
-        hoverColor="#8B0000" 
+        hoverColor="#8B000099" 
         action="Petition" 
         onSelect={handleActionSelect} 
         onHover={handleActionHover}
