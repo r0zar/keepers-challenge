@@ -2,11 +2,27 @@ import * as THREE from 'three'
 import React, { Suspense, useEffect, useRef, useState, useCallback, useLayoutEffect } from 'react'
 import { Canvas, useThree, useFrame, useLoader } from '@react-three/fiber'
 import { Flex, Box, useFlexSize } from '@react-three/flex'
-import { Loader, Line, useAspect } from '@react-three/drei'
+import { Loader, Line, useAspect, useGLTF, MeshDistortMaterial, Shadow } from '@react-three/drei'
 import Effects from './components/Effects'
 import Text from './components/Text'
-import Geo from './components/Geo'
 import state from './state'
+import {
+  AppConfig,
+  UserSession,
+  AuthDetails,
+  showConnect,
+  showContractCall,
+} from "@stacks/connect";
+import { StacksMainnet } from "@stacks/network";
+import { contractPrincipalCV, PostConditionMode, principalCV, stringAsciiCV, uintCV } from '@stacks/transactions'
+
+const appConfig = new AppConfig(["store_write"]);
+const userSession = new UserSession({ appConfig });
+
+const appDetails = {
+  name: "Charisma Explore",
+  icon: "https://charisma.rocks/dmg-logo.gif",
+};
 
 function HeightReporter({ onReflow }) {
   const size = useFlexSize()
@@ -48,7 +64,7 @@ function Page({ text, tag, images, textScaleFactor, onReflow, left = false }) {
       <Box marginLeft={1.5} marginRight={1.5} marginTop={2}>
         <Text position={[left ? 1 : -1, 0.5, 1]} fontSize={textScaleFactor} lineHeight={1} letterSpacing={-0.05} maxWidth={(viewport.width / 4) * 3}>
           {tag}
-          <meshBasicMaterial color="#cccccc" toneMapped={false} />
+          <meshBasicMaterial color="#999999" toneMapped={false} />
         </Text>
       </Box>
       <Box marginLeft={left ? 1.5 : 1} marginRight={left ? 1 : 1.5} marginBottom={1}>
@@ -59,7 +75,7 @@ function Page({ text, tag, images, textScaleFactor, onReflow, left = false }) {
           fontSize={1.5 * textScaleFactor}
           lineHeight={1}
           letterSpacing={-0.05}
-          color="black"
+          color="white"
           maxWidth={(viewport.width / 4) * 3}>
           {text}
         </Text>
@@ -74,7 +90,7 @@ function Layercard({ depth, boxWidth, boxHeight, text, textColor, color, map, te
   const pageLerp = useRef(state.top / size.height)
   useFrame(() => {
     const page = (pageLerp.current = THREE.MathUtils.lerp(pageLerp.current, state.top / size.height, 0.15))
-    if (depth >= 0) ref.current.opacity = page < state.threshold * 1.7 ? 1 : 1 - (page - state.threshold * 1.7)
+    if (depth >= 0) ref.current.opacity = page < state.threshold * 1.7 ? 0.9 : 0.9 - (page - state.threshold * 1.7)
   })
   return (
     <>
@@ -91,7 +107,7 @@ function Layercard({ depth, boxWidth, boxHeight, text, textColor, color, map, te
         fontSize={0.6 * textScaleFactor}
         lineHeight={1}
         letterSpacing={-0.05}
-        color={textColor}>
+        color={textColor || "white"}>
         {text}
       </Text>
     </>
@@ -132,7 +148,7 @@ function Content({ onReflow }) {
         <Box dir="row" width="100%" height="100%" align="center" justify="center">
           <Box centerAnchor>
             {state.lines.map((props, index) => (
-              <Line key={index} {...props} />
+              <Line key={index} {...props} color="white" />
             ))}
             <Text
               bold
@@ -142,7 +158,7 @@ function Content({ onReflow }) {
               fontSize={1.5 * scale}
               lineHeight={1}
               letterSpacing={-0.05}
-              color="black"
+              color="white"
               maxWidth={(viewport.width / 4) * 3}>
               {state.depthbox[0].text}
             </Text>
@@ -151,7 +167,7 @@ function Content({ onReflow }) {
         <Box dir="row" width="100%" height="100%" align="center" justify="center">
           <Box>
             <Layercard {...state.depthbox[0]} text={state.depthbox[1].text} boxWidth={bW} boxHeight={bH} map={texture} textScaleFactor={scale} />
-            <Geo position={[bW / 2, -bH / 2, state.depthbox[1].depth]} />
+            <Model position={[bW / 2, -bH / 2, state.depthbox[1].depth]} />
           </Box>
         </Box>
       </Flex>
@@ -161,18 +177,50 @@ function Content({ onReflow }) {
 
 export default function App() {
   const scrollArea = useRef()
-  const onScroll = (e) => (state.top = e.target.scrollTop)
+  const canvasRef = useRef()
+  const [allowCanvasPointerEvents, setAllowCanvasPointerEvents] = useState(false)
+  const onScroll = (e) => {
+    state.top = e.target.scrollTop
+    
+    // Check if we've reached the end of the scroll
+    const isAtBottom = e.target.scrollHeight - e.target.scrollTop <= e.target.clientHeight + 1
+    pages !== 0 && setAllowCanvasPointerEvents(isAtBottom)
+  }
+  
   useEffect(() => void onScroll({ target: scrollArea.current }), [])
   const [pages, setPages] = useState(0)
+
+  const handleWheel = (e) => {
+    if (!allowCanvasPointerEvents) {
+      scrollArea.current.scrollTop += e.deltaY;
+    }
+  }
+
+  const authOptions = {
+    appDetails,
+    userSession,
+  };
+
+  const handlePointerMove = (e) => {
+    const canvasBounds = canvasRef.current.getBoundingClientRect()
+    const x = ((e.clientX - canvasBounds.left) / canvasBounds.width) * 2 - 1
+    const y = -((e.clientY - canvasBounds.top) / canvasBounds.height) * 2 + 1
+    state.mouse = [x, y]
+  }
+
   return (
     <>
       <Canvas
+        ref={canvasRef}
         shadows
-        raycaster={{ enabled: false }}
         dpr={[1, 2]}
         camera={{ position: [0, 0, 10], far: 1000 }}
         gl={{ powerPreference: 'high-performance', alpha: false, antialias: false, stencil: false, depth: false }}
-        onCreated={({ gl }) => gl.setClearColor('#f5f5f5')}>
+        onCreated={({ gl }) => gl.setClearColor('#000000')}
+        style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%' }}
+        onWheel={handleWheel}
+        onPointerMove={handlePointerMove}
+      >
         <pointLight position={[-10, -10, -10]} intensity={1} />
         <ambientLight intensity={0.4} />
         <spotLight
@@ -193,10 +241,165 @@ export default function App() {
         className="scrollArea"
         ref={scrollArea}
         onScroll={onScroll}
-        onPointerMove={(e) => (state.mouse = [(e.clientX / window.innerWidth) * 2 - 1, (e.clientY / window.innerHeight) * 2 - 1])}>
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          overflow: 'auto',
+          pointerEvents: allowCanvasPointerEvents ? 'none' : 'auto',
+        }}
+      >
         <div style={{ height: `${pages * 100}vh` }} />
       </div>
       <Loader />
-    </>
+      </>
+  )
+}
+
+function ActionShape({ position, color, hoverColor, action, onSelect, distortFactor, speed = 1, onHover }) {
+  const [hovered, setHovered] = useState(false)
+  const group = useRef()
+  const { nodes } = useGLTF('/geo.min.glb', true)
+  const { gl } = useThree()
+
+  useFrame(({ clock }) => {
+    const t = (1 + Math.sin(clock.getElapsedTime() * 1.5 * speed + position[0])) / 2
+    group.current.position.y = t / 5
+    const rotationSpeed = hovered ? 0.01 : 0.005
+    group.current.rotation.x += rotationSpeed * speed
+    group.current.rotation.z += rotationSpeed * speed
+    
+    const baseScale = 0.4
+    const hoverScale = hovered ? baseScale * 1.1 : baseScale
+    group.current.scale.set(hoverScale, hoverScale, hoverScale)
+  })
+
+  return (
+    <group>
+      <group ref={group} position={position}>
+        <mesh
+          geometry={nodes.geo.geometry}
+          onPointerOver={(e) => {
+            setHovered(true)
+            gl.domElement.style.cursor = 'pointer'
+            onHover(action)
+          }}
+          onPointerOut={(e) => {
+            setHovered(false)
+            gl.domElement.style.cursor = 'auto'
+            onHover('')
+          }}
+          onClick={(e) => {
+            e.stopPropagation()
+            onSelect(action)
+          }}>
+          <MeshDistortMaterial 
+            color={hovered ? hoverColor : color} 
+            flatShading 
+            roughness={1} 
+            metalness={0.5} 
+            factor={distortFactor} 
+            speed={5 * speed} 
+          />
+        </mesh>
+        <mesh geometry={nodes.geo.geometry}>
+          <meshBasicMaterial color={color} wireframe />
+        </mesh>
+      </group>
+    </group>
+  )
+}
+
+function Model(props) {
+  const shadow = useRef()
+  const [hovered, setHovered] = useState('')
+  const [selected, setSelected] = useState('')
+
+  const handleActionSelect = async (action) => {
+    console.log(`Selected action: ${action}`)
+    setSelected(action)
+
+    console.log(action.toUpperCase())
+    !userSession.isUserSignedIn() && showConnect({
+      appDetails,
+      userSession,
+    })
+    
+    userSession.isUserSignedIn() && showContractCall({
+      userSession: userSession,
+      network: new StacksMainnet(),
+      contractAddress: 'SP2ZNGJ85ENDY6QRHQ5P2D4FXKGZWCKTB2T0Z55KS',
+      contractName: 'dungeon-crawler-rc1',
+      functionName: 'tap-interact',
+      functionArgs: [
+        principalCV('SP2ZNGJ85ENDY6QRHQ5P2D4FXKGZWCKTB2T0Z55KS.meme-engine-cha-rc1'), 
+        principalCV('SP2ZNGJ85ENDY6QRHQ5P2D4FXKGZWCKTB2T0Z55KS.keepers-challenge-rc1'), 
+        stringAsciiCV(action.toUpperCase())
+      ],
+      postConditionMode: PostConditionMode.Allow,
+      onFinish: data => {
+        console.log('Contract call successful', data);
+      },
+      onCancel: () => {
+        console.log('Contract call canceled');
+      }
+    });
+  }
+
+  const handleActionHover = (action) => {
+    setHovered(action)
+  }
+
+  return (
+    <group {...props} dispose={null}>
+      <group position={[0.05, -0.6, 0]}>
+        <Text position={[0, 0, 0]} fontSize={0.07} lineHeight={1} letterSpacing={-0.05}>
+          <meshBasicMaterial color="#cccccc" toneMapped={false} />
+        </Text>
+        <Text bold position={[-0.01, -0.1, 0]} fontSize={0.1} lineHeight={1} letterSpacing={-0.05} color="white">
+          {`Keeper's Challenge\nThe First Interaction`}
+        </Text>
+      </group>
+      <group position={[0, -1, 0]}>
+        <Text bold position={[0, 2.5, 0]} fontSize={0.5} lineHeight={1} letterSpacing={-0.05} color="white" anchorX="center" anchorY="middle">
+          {hovered || selected}
+        </Text>
+      </group>
+      <Shadow ref={shadow} opacity={0.3} rotation-x={-Math.PI / 2} position={[0, -1.51, 0]} />
+
+      {/* Action Shapes */}
+      <ActionShape 
+        position={[-1, 0, 0]} 
+        color="#8B0000" 
+        hoverColor="#c1121f" 
+        action="Petition" 
+        onSelect={handleActionSelect} 
+        onHover={handleActionHover}
+        distortFactor={5} 
+        speed={1} 
+      />
+      <ActionShape 
+        position={[0, 0, 0]} 
+        color="#B22222" 
+        hoverColor="#c1121f69" 
+        action="Challenge" 
+        onSelect={handleActionSelect} 
+        onHover={handleActionHover}
+        distortFactor={15} 
+        speed={1.5} 
+      />
+      <ActionShape 
+        position={[1, 0, 0]} 
+        color="#c1121f" 
+        hoverColor="#c1121f11" 
+        action="Heist" 
+        onSelect={handleActionSelect} 
+        onHover={handleActionHover}
+        distortFactor={25} 
+        speed={2.5} 
+      />
+    </group>
   )
 }

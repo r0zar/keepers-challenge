@@ -7,10 +7,10 @@ const state = {
     {
       tag: '00',
       text: `The Keeper's\nChallenge\nBegins`,
-      images: ['/images/BH41NVu.jpg', '/images/fBoIJLX.jpg', '/images/04zTfWB.jpg'],
+      images: ['/images/gem1.png'],
     },
-    { tag: '01', text: `Petitions and\nChallenges`, images: ['/images/c4cA8UN.jpg', '/images/ajQ73ol.jpg', '/images/gZOmLNU.jpg'] },
-    { tag: '02', text: `The Great\nHeist`, images: ['/images/mbFIW1b.jpg', '/images/mlDUVig.jpg', '/images/gwuZrgo.jpg'] },
+    { tag: '01', text: `Petitions and\nChallenges`, images: ['/images/gem2.png'] },
+    { tag: '02', text: `The Great\nHeist`, images: ['/images/gem3.png'] },
   ],
   depthbox: [
     {
@@ -18,13 +18,13 @@ const state = {
       color: '#cccccc',
       textColor: '#ffffff',
       text: 'In the realm of Charisma,\nwhere energy flows\nand choices echo,\nthe Keeper watches,\nwaiting for the worthy.',
-      image: '/images/cAKwexj.jpg',
+      image: '/images/journey-of-discovery.png',
     },
     {
       depth: -5,
       textColor: '#272727',
       text: 'Will you petition\nfor small gains,\nchallenge for greater rewards,\nor risk it all\nin a daring heist?',
-      image: '/images/04zTfWB.jpg',
+      image: '/images/treasure-chest.png',
     },
   ],
   lines: [

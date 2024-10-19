@@ -7,9 +7,13 @@
     "@react-three/drei": "4.1.8",
     "@react-three/fiber": "6.0.14",
     "@react-three/flex": "0.6.0",
-    "react": "17.0.2",
-    "react-dom": "17.0.2",
-    "react-scripts": "4.0.3",
+    "@stacks/connect": "^7.8.0",
+    "@stacks/connect-react": "^22.5.0",
+    "@stacks/network": "^6.17.0",
+    "@stacks/transactions": "^6.17.0",
+    "react": "latest",
+    "react-dom": "latest",
+    "react-scripts": "latest",
     "three": "0.127.0"
   },
   "scripts": {
