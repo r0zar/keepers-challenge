@@ -1,19 +1,19 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Keeper's Challenge",
+  "name": "The Dungeon Keeper's Challenge",
   "icons": [
     {
-      "src": "favicon.ico",
+      "src": "dmg-logo.png",
       "sizes": "64x64 32x32 24x24 16x16",
-      "type": "image/x-icon"
+      "type": "image/png"
     },
     {
-      "src": "logo192.png",
+      "src": "dmg-logo.png",
       "type": "image/png",
       "sizes": "192x192"
     },
     {
-      "src": "logo512.png",
+      "src": "dmg-logo.png",
       "type": "image/png",
       "sizes": "512x512"
     }
