@@ -8,6 +8,7 @@
     "@react-three/fiber": "6.0.14",
     "@react-three/flex": "0.6.0",
     "@stacks/connect": "^7.8.0",
+    "@stacks/network": "^6.17.0",
     "@stacks/transactions": "^6.17.0",
     "react": "latest",
     "react-dom": "latest",

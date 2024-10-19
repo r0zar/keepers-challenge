@@ -13,6 +13,8 @@ import {
   showContractCall,
 } from "@stacks/connect";
 import { PostConditionMode, principalCV, stringAsciiCV } from '@stacks/transactions'
+import { StacksMainnet } from '@stacks/network'
+
 const appConfig = new AppConfig(["store_write"]);
 const userSession = new UserSession({ appConfig });
 
@@ -326,7 +328,7 @@ function Model(props) {
     
     userSession.isUserSignedIn() && showContractCall({
       userSession: userSession,
-      network: 'mainnet',
+      network: new StacksMainnet(),
       contractAddress: 'SP2ZNGJ85ENDY6QRHQ5P2D4FXKGZWCKTB2T0Z55KS',
       contractName: 'dungeon-crawler-rc1',
       functionName: 'tap-interact',
