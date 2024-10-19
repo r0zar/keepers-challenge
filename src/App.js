@@ -9,12 +9,11 @@ import state from './state'
 import {
   AppConfig,
   UserSession,
-  AuthDetails,
   showConnect,
   showContractCall,
 } from "@stacks/connect";
 import { StacksMainnet } from "@stacks/network";
-import { contractPrincipalCV, PostConditionMode, principalCV, stringAsciiCV, uintCV } from '@stacks/transactions'
+import { PostConditionMode, principalCV, stringAsciiCV } from '@stacks/transactions'
 
 const appConfig = new AppConfig(["store_write"]);
 const userSession = new UserSession({ appConfig });
