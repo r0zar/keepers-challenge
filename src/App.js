@@ -10,10 +10,9 @@ import {
   AppConfig,
   UserSession,
   showConnect,
-  showContractCall,
+  openContractCall,
 } from "@stacks/connect";
-import { PostConditionMode, principalCV, stringAsciiCV } from '@stacks/transactions'
-import { StacksMainnet } from '@stacks/network'
+import { PostConditionMode, contractPrincipalCV, stringAsciiCV } from '@stacks/transactions'
 
 const appConfig = new AppConfig(["store_write"]);
 const userSession = new UserSession({ appConfig });
@@ -195,11 +194,6 @@ export default function App() {
     }
   }
 
-  const authOptions = {
-    appDetails,
-    userSession,
-  };
-
   const handlePointerMove = (e) => {
     const canvasBounds = canvasRef.current.getBoundingClientRect()
     const x = ((e.clientX - canvasBounds.left) / canvasBounds.width) * 2 - 1
@@ -326,15 +320,14 @@ function Model(props) {
       userSession,
     })
     
-    userSession.isUserSignedIn() && showContractCall({
+    userSession.isUserSignedIn() && openContractCall({
       userSession: userSession,
-      network: new StacksMainnet(),
       contractAddress: 'SP2ZNGJ85ENDY6QRHQ5P2D4FXKGZWCKTB2T0Z55KS',
       contractName: 'dungeon-crawler-rc1',
       functionName: 'tap-interact',
       functionArgs: [
-        principalCV('SP2ZNGJ85ENDY6QRHQ5P2D4FXKGZWCKTB2T0Z55KS.meme-engine-cha-rc1'), 
-        principalCV('SP2ZNGJ85ENDY6QRHQ5P2D4FXKGZWCKTB2T0Z55KS.keepers-challenge-rc1'), 
+        contractPrincipalCV('SP2ZNGJ85ENDY6QRHQ5P2D4FXKGZWCKTB2T0Z55KS', 'meme-engine-cha-rc1'), 
+        contractPrincipalCV('SP2ZNGJ85ENDY6QRHQ5P2D4FXKGZWCKTB2T0Z55KS', 'keepers-challenge-rc1'), 
         stringAsciiCV(action.toUpperCase())
       ],
       postConditionMode: PostConditionMode.Allow,
