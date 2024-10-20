@@ -350,7 +350,7 @@ function Model(props) {
         optionalCVOf(stringAsciiCV(action.toUpperCase())),
         // optionalCVOf(contractPrincipalCV('SP2ZNGJ85ENDY6QRHQ5P2D4FXKGZWCKTB2T0Z55KS', 'keepers-challenge-rc3')), 
         // optionalCVOf(stringAsciiCV(action.toUpperCase())),
-        optionalCVOf(contractPrincipalCV('SP2ZNGJ85ENDY6QRHQ5P2D4FXKGZWCKTB2T0Z55KS', 'hot-potato')), 
+        optionalCVOf(contractPrincipalCV('SP2ZNGJ85ENDY6QRHQ5P2D4FXKGZWCKTB2T0Z55KS', 'hot-potato-rc1')), 
         optionalCVOf(stringAsciiCV("PASS")),
         // noneCV(),
         // noneCV(),
