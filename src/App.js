@@ -408,7 +408,7 @@ function Model(props) {
       <Shadow ref={shadow} opacity={0.3} rotation-x={-Math.PI / 2} position={[0, -1.51, 0]} />
 
       {/* Action Shapes */}
-      <ActionShape 
+      {/* <ActionShape 
         position={[-1, 0, 0]} 
         color="#c1121f" 
         hoverColor="#8B000099" 
@@ -417,18 +417,18 @@ function Model(props) {
         onHover={handleActionHover}
         distortFactor={5} 
         speed={1} 
-      />
+      /> */}
       <ActionShape 
         position={[0, 0, 0]} 
         color="#B22222" 
         hoverColor="#c1121f69" 
-        action="Challenge" 
+        action="Energy" 
         onSelect={handleActionSelect} 
         onHover={handleActionHover}
         distortFactor={15} 
         speed={1.5} 
       />
-      <ActionShape 
+      {/* <ActionShape 
         position={[1, 0, 0]} 
         color="#c1121f" 
         hoverColor="#c1121f11" 
@@ -437,7 +437,7 @@ function Model(props) {
         onHover={handleActionHover}
         distortFactor={25} 
         speed={2.5} 
-      />
+      /> */}
     </group>
   )
 }
