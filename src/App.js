@@ -12,7 +12,7 @@ import {
   showConnect,
   openContractCall,
 } from "@stacks/connect";
-import { PostConditionMode, contractPrincipalCV, stringAsciiCV } from '@stacks/transactions'
+import { PostConditionMode, contractPrincipalCV, noneCV, optionalCVOf, stringAsciiCV } from '@stacks/transactions'
 import { StacksMainnet } from '@stacks/network'
 
 
@@ -326,12 +326,25 @@ function Model(props) {
       userSession: userSession,
       network: new StacksMainnet(),
       contractAddress: 'SP2ZNGJ85ENDY6QRHQ5P2D4FXKGZWCKTB2T0Z55KS',
-      contractName: 'dungeon-crawler-rc1',
-      functionName: 'tap-interact',
+      contractName: 'dungeon-crawler-rc4',
+      functionName: 'explore',
       functionArgs: [
-        contractPrincipalCV('SP2ZNGJ85ENDY6QRHQ5P2D4FXKGZWCKTB2T0Z55KS', 'meme-engine-cha-rc1'), 
-        contractPrincipalCV('SP2ZNGJ85ENDY6QRHQ5P2D4FXKGZWCKTB2T0Z55KS', 'keepers-challenge-rc2'), 
-        stringAsciiCV(action.toUpperCase())
+        optionalCVOf(contractPrincipalCV('SP2ZNGJ85ENDY6QRHQ5P2D4FXKGZWCKTB2T0Z55KS', 'meme-engine-cha-rc3')), 
+        optionalCVOf(stringAsciiCV("TAP")),
+        optionalCVOf(contractPrincipalCV('SP2ZNGJ85ENDY6QRHQ5P2D4FXKGZWCKTB2T0Z55KS', 'keepers-challenge-rc3')), 
+        optionalCVOf(stringAsciiCV(action.toUpperCase())),
+        optionalCVOf(contractPrincipalCV('SP2ZNGJ85ENDY6QRHQ5P2D4FXKGZWCKTB2T0Z55KS', 'keepers-challenge-rc3')), 
+        optionalCVOf(stringAsciiCV(action.toUpperCase())),
+        optionalCVOf(contractPrincipalCV('SP2ZNGJ85ENDY6QRHQ5P2D4FXKGZWCKTB2T0Z55KS', 'kraken-arbitrage-rc1')), 
+        optionalCVOf(stringAsciiCV("STRW1")),
+        optionalCVOf(contractPrincipalCV('SP2ZNGJ85ENDY6QRHQ5P2D4FXKGZWCKTB2T0Z55KS', 'kraken-arbitrage-rc1')), 
+        optionalCVOf(stringAsciiCV("STRW2")),
+        optionalCVOf(contractPrincipalCV('SP2ZNGJ85ENDY6QRHQ5P2D4FXKGZWCKTB2T0Z55KS', 'kraken-arbitrage-rc1')), 
+        optionalCVOf(stringAsciiCV("STRR1")),
+        optionalCVOf(contractPrincipalCV('SP2ZNGJ85ENDY6QRHQ5P2D4FXKGZWCKTB2T0Z55KS', 'kraken-arbitrage-rc1')), 
+        optionalCVOf(stringAsciiCV("STRR2")),
+        optionalCVOf(contractPrincipalCV('SP2ZNGJ85ENDY6QRHQ5P2D4FXKGZWCKTB2T0Z55KS', 'charisma-mine-rc1')), 
+        optionalCVOf(stringAsciiCV("WRAP")),
       ],
       postConditionMode: PostConditionMode.Allow,
       onFinish: data => {
