@@ -12,7 +12,7 @@ import {
   showConnect,
   openContractCall,
 } from "@stacks/connect";
-import { PostConditionMode, contractPrincipalCV, noneCV, optionalCVOf, stringAsciiCV } from '@stacks/transactions'
+import { Pc, PostConditionMode, contractPrincipalCV, noneCV, optionalCVOf, stringAsciiCV } from '@stacks/transactions'
 import { StacksMainnet } from '@stacks/network'
 
 
@@ -278,7 +278,7 @@ function ActionShape({ position, color, hoverColor, action, onSelect, distortFac
           geometry={nodes.geo.geometry}
           onPointerOver={(e) => {
             setHovered(true)
-            gl.domElement.style.cursor = 'pointer'
+            gl.domElement.style.cursor = action === 'Heist' ? 'not-allowed' : 'pointer'
             onHover(action)
           }}
           onPointerOut={(e) => {
@@ -288,7 +288,7 @@ function ActionShape({ position, color, hoverColor, action, onSelect, distortFac
           }}
           onClick={(e) => {
             e.stopPropagation()
-            onSelect(action)
+            action !== 'Heist' && onSelect(action)
           }}>
           <MeshDistortMaterial 
             color={hovered ? hoverColor : color} 
@@ -316,11 +316,22 @@ function Model(props) {
     console.log(`Selected action: ${action}`)
     setSelected(action)
 
+    const useData = userSession.isUserSignedIn() && userSession.loadUserData()
+
     console.log(action.toUpperCase())
     !userSession.isUserSignedIn() && showConnect({
       appDetails,
       userSession,
     })
+
+    const postConditions = [
+      Pc.principal(useData.profile.stxAddress.mainnet).willSendGte(1).ft('SP2ZNGJ85ENDY6QRHQ5P2D4FXKGZWCKTB2T0Z55KS.energy','energy'),
+      Pc.principal(useData.profile.stxAddress.mainnet).willSendGte(1).ft('SP2D5BGGJ956A635JG7CJQ59FTRFRB0893514EZPJ.dme000-governance-token','charisma'),
+    ]
+
+    if (action === 'Petition' || action === 'Challenge') {
+      postConditions.push(Pc.principal('SP2ZNGJ85ENDY6QRHQ5P2D4FXKGZWCKTB2T0Z55KS').willSendGte(2500000).ft('SP2D5BGGJ956A635JG7CJQ59FTRFRB0893514EZPJ.dme000-governance-token','charisma'))
+    }
     
     userSession.isUserSignedIn() && openContractCall({
       userSession: userSession,
@@ -331,22 +342,35 @@ function Model(props) {
       functionArgs: [
         optionalCVOf(contractPrincipalCV('SP2ZNGJ85ENDY6QRHQ5P2D4FXKGZWCKTB2T0Z55KS', 'meme-engine-cha-rc3')), 
         optionalCVOf(stringAsciiCV("TAP")),
+        optionalCVOf(contractPrincipalCV('SP2ZNGJ85ENDY6QRHQ5P2D4FXKGZWCKTB2T0Z55KS', 'meme-engine-iouwelsh-rc1')), 
+        optionalCVOf(stringAsciiCV("TAP")),
+        optionalCVOf(contractPrincipalCV('SP2ZNGJ85ENDY6QRHQ5P2D4FXKGZWCKTB2T0Z55KS', 'meme-engine-iouroo-rc1')), 
+        optionalCVOf(stringAsciiCV("TAP")),
         optionalCVOf(contractPrincipalCV('SP2ZNGJ85ENDY6QRHQ5P2D4FXKGZWCKTB2T0Z55KS', 'keepers-challenge-rc3')), 
         optionalCVOf(stringAsciiCV(action.toUpperCase())),
-        optionalCVOf(contractPrincipalCV('SP2ZNGJ85ENDY6QRHQ5P2D4FXKGZWCKTB2T0Z55KS', 'keepers-challenge-rc3')), 
-        optionalCVOf(stringAsciiCV(action.toUpperCase())),
-        optionalCVOf(contractPrincipalCV('SP2ZNGJ85ENDY6QRHQ5P2D4FXKGZWCKTB2T0Z55KS', 'kraken-arbitrage-rc1')), 
-        optionalCVOf(stringAsciiCV("STRW1")),
-        optionalCVOf(contractPrincipalCV('SP2ZNGJ85ENDY6QRHQ5P2D4FXKGZWCKTB2T0Z55KS', 'kraken-arbitrage-rc1')), 
-        optionalCVOf(stringAsciiCV("STRW2")),
-        optionalCVOf(contractPrincipalCV('SP2ZNGJ85ENDY6QRHQ5P2D4FXKGZWCKTB2T0Z55KS', 'kraken-arbitrage-rc1')), 
-        optionalCVOf(stringAsciiCV("STRR1")),
-        optionalCVOf(contractPrincipalCV('SP2ZNGJ85ENDY6QRHQ5P2D4FXKGZWCKTB2T0Z55KS', 'kraken-arbitrage-rc1')), 
-        optionalCVOf(stringAsciiCV("STRR2")),
+        // optionalCVOf(contractPrincipalCV('SP2ZNGJ85ENDY6QRHQ5P2D4FXKGZWCKTB2T0Z55KS', 'keepers-challenge-rc3')), 
+        // optionalCVOf(stringAsciiCV(action.toUpperCase())),
+        optionalCVOf(contractPrincipalCV('SP2ZNGJ85ENDY6QRHQ5P2D4FXKGZWCKTB2T0Z55KS', 'hot-potato')), 
+        optionalCVOf(stringAsciiCV("PASS")),
+        // noneCV(),
+        // noneCV(),
+        noneCV(),
+        noneCV(),
+        noneCV(),
+        noneCV(),
+        // optionalCVOf(contractPrincipalCV('SP2ZNGJ85ENDY6QRHQ5P2D4FXKGZWCKTB2T0Z55KS', 'kraken-arbitrage-rc1')), 
+        // optionalCVOf(stringAsciiCV("STRW1")),
+        // optionalCVOf(contractPrincipalCV('SP2ZNGJ85ENDY6QRHQ5P2D4FXKGZWCKTB2T0Z55KS', 'kraken-arbitrage-rc1')), 
+        // optionalCVOf(stringAsciiCV("STRW2")),
+        // optionalCVOf(contractPrincipalCV('SP2ZNGJ85ENDY6QRHQ5P2D4FXKGZWCKTB2T0Z55KS', 'kraken-arbitrage-rc1')), 
+        // optionalCVOf(stringAsciiCV("STRR1")),
+        // optionalCVOf(contractPrincipalCV('SP2ZNGJ85ENDY6QRHQ5P2D4FXKGZWCKTB2T0Z55KS', 'kraken-arbitrage-rc1')), 
+        // optionalCVOf(stringAsciiCV("STRR2")),
         optionalCVOf(contractPrincipalCV('SP2ZNGJ85ENDY6QRHQ5P2D4FXKGZWCKTB2T0Z55KS', 'charisma-mine-rc1')), 
         optionalCVOf(stringAsciiCV("WRAP")),
       ],
-      postConditionMode: PostConditionMode.Allow,
+      postConditionMode: PostConditionMode.Deny,
+      postConditions,
       onFinish: data => {
         console.log('Contract call successful', data);
       },
