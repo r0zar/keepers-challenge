@@ -326,7 +326,7 @@ function Model(props) {
 
     const postConditions = [
       Pc.principal(useData.profile.stxAddress.mainnet).willSendGte(1).ft('SP2ZNGJ85ENDY6QRHQ5P2D4FXKGZWCKTB2T0Z55KS.energy','energy'),
-      Pc.principal(useData.profile.stxAddress.mainnet).willSendGte(1).ft('SP2D5BGGJ956A635JG7CJQ59FTRFRB0893514EZPJ.dme000-governance-token','charisma'),
+      // Pc.principal(useData.profile.stxAddress.mainnet).willSendGte(1).ft('SP2D5BGGJ956A635JG7CJQ59FTRFRB0893514EZPJ.dme000-governance-token','charisma'),
     ]
 
     if (action === 'Petition' || action === 'Challenge') {
@@ -350,12 +350,12 @@ function Model(props) {
         optionalCVOf(stringAsciiCV(action.toUpperCase())),
         // optionalCVOf(contractPrincipalCV('SP2ZNGJ85ENDY6QRHQ5P2D4FXKGZWCKTB2T0Z55KS', 'keepers-challenge-rc3')), 
         // optionalCVOf(stringAsciiCV(action.toUpperCase())),
-        optionalCVOf(contractPrincipalCV('SP2ZNGJ85ENDY6QRHQ5P2D4FXKGZWCKTB2T0Z55KS', 'hot-potato')), 
-        optionalCVOf(stringAsciiCV("PASS")),
-        // noneCV(),
-        // noneCV(),
-        // noneCV(),
-        // noneCV(),
+        // optionalCVOf(contractPrincipalCV('SP2ZNGJ85ENDY6QRHQ5P2D4FXKGZWCKTB2T0Z55KS', 'hot-potato')), 
+        // optionalCVOf(stringAsciiCV("PASS")),
+        noneCV(),
+        noneCV(),
+        noneCV(),
+        noneCV(),
         noneCV(),
         noneCV(),
         // optionalCVOf(contractPrincipalCV('SP2ZNGJ85ENDY6QRHQ5P2D4FXKGZWCKTB2T0Z55KS', 'kraken-arbitrage-rc1')), 
