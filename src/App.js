@@ -12,7 +12,7 @@ import {
   showConnect,
   openContractCall,
 } from "@stacks/connect";
-import { Pc, PostConditionMode, contractPrincipalCV, noneCV, optionalCVOf, stringAsciiCV } from '@stacks/transactions'
+import { Pc, PostConditionMode, callReadOnlyFunction, contractPrincipalCV, cvToJSON, cvToString, cvToValue, noneCV, optionalCVOf, responseOkCV, stringAsciiCV } from '@stacks/transactions'
 import { StacksMainnet } from '@stacks/network'
 
 
@@ -318,67 +318,59 @@ function Model(props) {
 
     const useData = userSession.isUserSignedIn() && userSession.loadUserData()
 
-    console.log(action.toUpperCase())
     !userSession.isUserSignedIn() && showConnect({
       appDetails,
       userSession,
     })
 
+    const ROZAR_ADDR = 'SP2ZNGJ85ENDY6QRHQ5P2D4FXKGZWCKTB2T0Z55KS'
+
     const postConditions = [
+      // fatigue burn
       // Pc.principal(useData.profile.stxAddress.mainnet).willSendGte(1).ft('SP2ZNGJ85ENDY6QRHQ5P2D4FXKGZWCKTB2T0Z55KS.energy','energy'),
+      // will send DMG (hot potato pass)
       Pc.principal(useData.profile.stxAddress.mainnet).willSendGte(1).ft('SP2D5BGGJ956A635JG7CJQ59FTRFRB0893514EZPJ.dme000-governance-token','charisma'),
     ]
 
     if (action === 'Petition' || action === 'Challenge') {
-      // postConditions.push(Pc.principal('SP2ZNGJ85ENDY6QRHQ5P2D4FXKGZWCKTB2T0Z55KS').willSendGte(2500000).ft('SP2D5BGGJ956A635JG7CJQ59FTRFRB0893514EZPJ.dme000-governance-token','charisma'))
+      // postConditions.push(Pc.principal(ROZAR_ADDR).willSendGte(2500000).ft('SP2D5BGGJ956A635JG7CJQ59FTRFRB0893514EZPJ.dme000-governance-token','charisma'))
     }
     
     userSession.isUserSignedIn() && openContractCall({
       userSession: userSession,
       network: new StacksMainnet(),
-      contractAddress: 'SP2ZNGJ85ENDY6QRHQ5P2D4FXKGZWCKTB2T0Z55KS',
+      contractAddress: ROZAR_ADDR,
       contractName: 'dungeon-crawler-rc4',
       functionName: 'explore',
       functionArgs: [
-        optionalCVOf(contractPrincipalCV('SP2ZNGJ85ENDY6QRHQ5P2D4FXKGZWCKTB2T0Z55KS', 'meme-engine-cha-rc3')), 
-        optionalCVOf(stringAsciiCV("TAP")),
-        optionalCVOf(contractPrincipalCV('SP2ZNGJ85ENDY6QRHQ5P2D4FXKGZWCKTB2T0Z55KS', 'meme-engine-iouwelsh-rc1')), 
-        optionalCVOf(stringAsciiCV("TAP")),
-        optionalCVOf(contractPrincipalCV('SP2ZNGJ85ENDY6QRHQ5P2D4FXKGZWCKTB2T0Z55KS', 'meme-engine-iouroo-rc1')), 
-        optionalCVOf(stringAsciiCV("TAP")),
-        optionalCVOf(contractPrincipalCV('SP2ZNGJ85ENDY6QRHQ5P2D4FXKGZWCKTB2T0Z55KS', 'fatigue-rc1')),
-        optionalCVOf(stringAsciiCV("BURN")),
-        // optionalCVOf(contractPrincipalCV('SP2ZNGJ85ENDY6QRHQ5P2D4FXKGZWCKTB2T0Z55KS', 'keepers-challenge-rc3')), 
+        optionalCVOf(contractPrincipalCV(ROZAR_ADDR, 'meme-engine-cha-rc3')), optionalCVOf(stringAsciiCV("TAP")),
+        optionalCVOf(contractPrincipalCV(ROZAR_ADDR, 'meme-engine-iouwelsh-rc1')), optionalCVOf(stringAsciiCV("TAP")),
+        optionalCVOf(contractPrincipalCV(ROZAR_ADDR, 'meme-engine-iouroo-rc1')), optionalCVOf(stringAsciiCV("TAP")),
+        // optionalCVOf(contractPrincipalCV(ROZAR_ADDR, 'fatigue-rc1')), optionalCVOf(stringAsciiCV("BURN")),
+        optionalCVOf(contractPrincipalCV(ROZAR_ADDR, 'hot-potato-rc1')), optionalCVOf(stringAsciiCV("PASS")),
+        // noneCV(), noneCV(),
+        // noneCV(), noneCV(),
+        // noneCV(), noneCV(),
+        // noneCV(), noneCV(),
+        noneCV(), noneCV(),
+        noneCV(), noneCV(),
+        noneCV(), noneCV(),
+        // optionalCVOf(contractPrincipalCV(ROZAR_ADDR, 'keepers-challenge-rc3')), 
         // optionalCVOf(stringAsciiCV(action.toUpperCase())),
-        // optionalCVOf(contractPrincipalCV('SP2ZNGJ85ENDY6QRHQ5P2D4FXKGZWCKTB2T0Z55KS', 'keepers-challenge-rc3')), 
+        // optionalCVOf(contractPrincipalCV(ROZAR_ADDR, 'keepers-challenge-rc3')), 
         // optionalCVOf(stringAsciiCV(action.toUpperCase())),
-        optionalCVOf(contractPrincipalCV('SP2ZNGJ85ENDY6QRHQ5P2D4FXKGZWCKTB2T0Z55KS', 'hot-potato-rc1')), 
-        optionalCVOf(stringAsciiCV("PASS")),
-        // noneCV(),
-        // noneCV(),
-        // noneCV(),
-        // noneCV(),
-        // noneCV(),
-        // noneCV(),
-        noneCV(),
-        noneCV(),
-        noneCV(),
-        noneCV(),
-        noneCV(),
-        noneCV(),
-        // optionalCVOf(contractPrincipalCV('SP2ZNGJ85ENDY6QRHQ5P2D4FXKGZWCKTB2T0Z55KS', 'kraken-arbitrage-rc1')), 
+        // optionalCVOf(contractPrincipalCV(ROZAR_ADDR, 'kraken-arbitrage-rc1')), 
         // optionalCVOf(stringAsciiCV("STRW1")),
-        // optionalCVOf(contractPrincipalCV('SP2ZNGJ85ENDY6QRHQ5P2D4FXKGZWCKTB2T0Z55KS', 'kraken-arbitrage-rc1')), 
+        // optionalCVOf(contractPrincipalCV(ROZAR_ADDR, 'kraken-arbitrage-rc1')), 
         // optionalCVOf(stringAsciiCV("STRW2")),
-        // optionalCVOf(contractPrincipalCV('SP2ZNGJ85ENDY6QRHQ5P2D4FXKGZWCKTB2T0Z55KS', 'kraken-arbitrage-rc1')), 
+        // optionalCVOf(contractPrincipalCV(ROZAR_ADDR, 'kraken-arbitrage-rc1')), 
         // optionalCVOf(stringAsciiCV("STRR1")),
-        // optionalCVOf(contractPrincipalCV('SP2ZNGJ85ENDY6QRHQ5P2D4FXKGZWCKTB2T0Z55KS', 'kraken-arbitrage-rc1')), 
+        // optionalCVOf(contractPrincipalCV(ROZAR_ADDR, 'kraken-arbitrage-rc1')), 
         // optionalCVOf(stringAsciiCV("STRR2")),
-        // optionalCVOf(contractPrincipalCV('SP2ZNGJ85ENDY6QRHQ5P2D4FXKGZWCKTB2T0Z55KS', 'charisma-mine-rc1')), 
-        // optionalCVOf(stringAsciiCV("WRAP")),
+        optionalCVOf(contractPrincipalCV(ROZAR_ADDR, 'charisma-mine-rc1')), optionalCVOf(stringAsciiCV("WRAP")),
       ],
-      postConditionMode: PostConditionMode.Allow,
-      // postConditions,
+      postConditionMode: PostConditionMode.Deny,
+      postConditions,
       onFinish: data => {
         console.log('Contract call successful', data);
       },
