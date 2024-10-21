@@ -327,7 +327,7 @@ function Model(props) {
 
     const postConditions = [
       // fatigue burn
-      // Pc.principal(useData.profile.stxAddress.mainnet).willSendGte(1).ft('SP2ZNGJ85ENDY6QRHQ5P2D4FXKGZWCKTB2T0Z55KS.energy','energy'),
+      Pc.principal(useData.profile.stxAddress.mainnet).willSendGte(1).ft('SP2ZNGJ85ENDY6QRHQ5P2D4FXKGZWCKTB2T0Z55KS.energy','energy'),
       // will send DMG (hot potato pass)
       Pc.principal(useData.profile.stxAddress.mainnet).willSendGte(1).ft('SP2D5BGGJ956A635JG7CJQ59FTRFRB0893514EZPJ.dme000-governance-token','charisma'),
     ]
@@ -346,13 +346,13 @@ function Model(props) {
         optionalCVOf(contractPrincipalCV(ROZAR_ADDR, 'meme-engine-cha-rc3')), optionalCVOf(stringAsciiCV("TAP")),
         optionalCVOf(contractPrincipalCV(ROZAR_ADDR, 'meme-engine-iouwelsh-rc1')), optionalCVOf(stringAsciiCV("TAP")),
         optionalCVOf(contractPrincipalCV(ROZAR_ADDR, 'meme-engine-iouroo-rc1')), optionalCVOf(stringAsciiCV("TAP")),
-        // optionalCVOf(contractPrincipalCV(ROZAR_ADDR, 'fatigue-rc1')), optionalCVOf(stringAsciiCV("BURN")),
+        optionalCVOf(contractPrincipalCV(ROZAR_ADDR, 'fatigue-rc2')), optionalCVOf(stringAsciiCV("BURN")),
         optionalCVOf(contractPrincipalCV(ROZAR_ADDR, 'hot-potato-rc1')), optionalCVOf(stringAsciiCV("PASS")),
         // noneCV(), noneCV(),
         // noneCV(), noneCV(),
         // noneCV(), noneCV(),
         // noneCV(), noneCV(),
-        noneCV(), noneCV(),
+        // noneCV(), noneCV(),
         noneCV(), noneCV(),
         noneCV(), noneCV(),
         // optionalCVOf(contractPrincipalCV(ROZAR_ADDR, 'keepers-challenge-rc3')), 
